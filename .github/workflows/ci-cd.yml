@@ -15,7 +15,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 2. Run Secret Scanner (Trivy) to check for leaked credentials
+    # 2. Run Secret Scanner (Trivy)
     - name: Run Trivy vulnerability scanner (Repo scan)
       uses: aquasecurity/trivy-action@master
       with:
@@ -42,3 +42,21 @@ jobs:
         context: .
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/securedeploy:latest,${{ secrets.DOCKERHUB_USERNAME }}/securedeploy:${{ github.sha }}
+
+    # 6. Setup Terraform inside GitHub Actions Runner
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.5.0"
+
+    # 7. Terraform Format Check (Formatting sahi hai ya nahi)
+    - name: Terraform Format
+      run: terraform fmt -check
+      working-directory: ./terraform
+
+    # 8. Terraform Init & Validate (Syntax check bina deploy kiye)
+    - name: Terraform Init & Validate
+      run: |
+        terraform init
+        terraform validate
+      working-directory: ./terraform
