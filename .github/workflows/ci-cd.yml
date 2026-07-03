@@ -22,7 +22,7 @@ jobs:
         scan-type: 'fs'
         ignore-unfixed: true
         format: 'table'
-        exit-code: '0' # Abhi pipeline block nahi karega, bas warning dikhayega
+        exit-code: '0'
 
     # 3. Set up Docker Buildx
     - name: Set up Docker Buildx
@@ -32,8 +32,8 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets::DOCKERHUB_USERNAME }}
-        password: ${{ secrets::DOCKERHUB_TOKEN }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     # 5. Build and Push Docker Image
     - name: Build and push Docker image
@@ -41,4 +41,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets::DOCKERHUB_USERNAME }}/securedeploy:latest,${{ secrets::DOCKERHUB_USERNAME }}/securedeploy:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/securedeploy:latest,${{ secrets.DOCKERHUB_USERNAME }}/securedeploy:${{ github.sha }}
